@@ -24,8 +24,13 @@ export default class App extends Component {
   handlerPageIncrement = () => {
     this.setState(prevState => ({page: prevState.page + 1, status: 'pending'}));
   };
-  handlerOpenModal = e => {
-    this.setState({modalState: true, hdImgUrl: e.target.dataset.src});
+  handlerToggleModal = () => {
+    this.setState(prevState => ({
+      modalState: !prevState.modalState,
+    }));
+  };
+  handlerBigImageUrl = e => {
+    this.setState({hdImgUrl: e.target.dataset.src});
   };
   async componentDidUpdate(prevProps, prevState) {
     const {query, page} = this.state;
@@ -74,7 +79,7 @@ export default class App extends Component {
   }
 
   render() {
-    const {status, query, images} = this.state;
+    const {status, query, images, hdImgUrl, modalState} = this.state;
     return (
       <>
         <Searchbar onQueryUpdate={this.handlerQueryUpdate} />
@@ -82,17 +87,19 @@ export default class App extends Component {
           <ImageGallery status={status} query={query} images={images}>
             <ImageGalleryItem
               images={images}
-              onClick={this.handlerOpenModal}
+              handlerToggleModal={this.handlerToggleModal}
+              handlerBigImageUrl={this.handlerBigImageUrl}
             ></ImageGalleryItem>
           </ImageGallery>
         </Fuse>
         <Button
-          status={this.state.status}
+          status={status}
           handlerPageIncrement={this.handlerPageIncrement}
         ></Button>
         <Modal
-          modalState={this.state.modalState}
-          hdImgUrl={this.state.hdImgUrl}
+          onClickCloseModal={this.handlerToggleModal}
+          modalState={modalState}
+          hdImgUrl={hdImgUrl}
         />
         <ToastContainer style={{width: 'inherit'}} />
       </>
