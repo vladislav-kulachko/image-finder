@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import s from './Searchbar.module.scss';
 import SearchIcon from '@material-ui/icons/Search';
 import {toast, Flip} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 export default class Searchbar extends Component {
   state = {query: ''};

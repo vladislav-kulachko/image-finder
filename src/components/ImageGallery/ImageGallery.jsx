@@ -11,7 +11,7 @@ export default class ImageGallery extends Component {
         position: 'bottom-center',
         autoClose: 5000,
         transition: Flip,
-        toastId: 1,
+        toastId: 2,
       });
     }
   }
