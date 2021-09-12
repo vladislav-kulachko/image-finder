@@ -13,6 +13,7 @@ export default class ImageGalleryItem extends Component {
       }),
     ),
   };
+
   onOpenModal = e => {
     this.props.handlerToggleModal();
     this.props.handlerBigImageUrl(e);

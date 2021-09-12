@@ -24,12 +24,21 @@ export default class App extends Component {
     const {query, page} = this.state;
     try {
       if (query !== prevState.query) {
+        // this.setState({status: 'pending'});
         const fetchedImages = await fetchImagesQuery(query, page);
+        this.setState({
+          images: fetchedImages,
+        });
 
-        this.setState({images: fetchedImages, status: 'resolved'});
-        if (fetchedImages.length === 0) {
-          this.setState({status: 'rejected'});
-        }
+        if (fetchedImages.length >= 12) {
+          this.setState({
+            status: 'resolved',
+          });
+        } else
+          this.setState({
+            status: 'rejected',
+          });
+
         window.scrollTo({
           top: 0,
           behavior: 'smooth',
@@ -44,11 +53,16 @@ export default class App extends Component {
           const fetchedImages = await fetchImagesQuery(query, page);
           this.setState({
             images: [...prevState.images, ...fetchedImages],
-            status: 'resolved',
           });
-          if (fetchedImages.length === 0) {
-            this.setState({status: 'rejected'});
-          }
+          if (fetchedImages.length >= 12) {
+            this.setState({
+              status: 'resolved',
+            });
+          } else
+            this.setState({
+              status: 'rejected',
+            });
+          console.log(fetchedImages.length);
           window.scrollTo({
             top: document.documentElement.scrollHeight,
             behavior: 'smooth',
@@ -59,9 +73,18 @@ export default class App extends Component {
       this.setState({status: 'rejected'});
     }
   }
-
-  handlerQueryUpdate = query => {
-    this.setState({query: query, page: 1, status: 'pending'});
+  changeStatus = () => {
+    this.setState({status: 'idle'});
+  };
+  handlerQueryUpdate = newQuery => {
+    this.setState(
+      prevState =>
+        prevState.query !== newQuery && {
+          query: newQuery,
+          page: 1,
+          status: 'pending',
+        },
+    );
   };
   handlerPageIncrement = () => {
     this.setState(prevState => ({page: prevState.page + 1, status: 'pending'}));
@@ -81,8 +104,14 @@ export default class App extends Component {
       <>
         <Searchbar onQueryUpdate={this.handlerQueryUpdate}></Searchbar>
         <Fuse>
-          <ImageGallery status={status} query={query} images={images}>
+          <ImageGallery
+            status={status}
+            query={query}
+            changeStatus={this.changeStatus}
+          >
             <ImageGalleryItem
+              status={status}
+              query={query}
               images={images}
               handlerToggleModal={this.handlerToggleModal}
               handlerBigImageUrl={this.handlerBigImageUrl}

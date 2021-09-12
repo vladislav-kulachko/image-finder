@@ -13,6 +13,7 @@ export default class ImageGallery extends Component {
         transition: Flip,
         toastId: 2,
       });
+      this.props.changeStatus();
     }
   }
   render() {
