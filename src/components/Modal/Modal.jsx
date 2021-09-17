@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import s from './Modal.module.scss';
 export default class Modal extends Component {
-  state = {modalState: false};
   componentDidMount() {
     window.addEventListener('keydown', this.handlerKeyDownClose);
   }
